@@ -2,47 +2,47 @@
 using namespace vex;
 
 motor intake = motor(PORT8, ratio18_1, true);
-motor clampMotor = motor(PORT7, ratio36_1, false);
-rotation clampRotation = rotation(PORT10, true);
-distance mogo_distance = distance(PORT11);
+motor liftMotor = motor(PORT7, ratio36_1, false);
+rotation liftRotation = rotation(PORT10, true);
+distance arm_distance = distance(PORT11);
 
-bool clamp_is_up = true;
-void detect_mogo(){
-  if (mogo_distance.objectDistance(inches) < 1 && clamp_is_up){
-    clamp_mogo();
+bool lift_is_up = true;
+void detect_arm(){
+  if (arm_distance.objectDistance(inches) < 1 && lift_is_up){
+    lift_arm();
   }
 }
 
-void rotate_clamp_to(float angle)
+void rotate_lift_to(float angle)
 {
-  PID clampPID(angle - clampRotation.position(deg), 0.4, 0.2, 0, 15, 3, 200, 1000);
-  while (clampPID.is_done() == false) {
-    float error = (angle - clampRotation.position(deg));
-    float output = clampPID.compute(error);
+  PID liftPID(angle - liftRotation.position(deg), 0.4, 0.2, 0, 15, 3, 200, 1000);
+  while (liftPID.is_done() == false) {
+    float error = (angle - liftRotation.position(deg));
+    float output = liftPID.compute(error);
     output = threshold(output, -10, 10);
-    clampMotor.spin(forward, output, volt);
+    liftMotor.spin(forward, output, volt);
     wait(10, msec);
   }
-  clampMotor.stop(hold);
+  liftMotor.stop(hold);
 }
 
-void clamp_mogo(){
-  rotate_clamp_to(240);
+void lift_arm(){
+  rotate_lift_to(240);
 }
 
-void release_mogo()
+void release_arm()
 {
-  rotate_clamp_to(40);
+  rotate_lift_to(40);
 }
 
-void toggle_clamp() {
-  if (clamp_is_up == true) {
-   clamp_mogo();
-   clamp_is_up = false;
+void toggle_lift() {
+  if (lift_is_up == true) {
+   lift_arm();
+   lift_is_up = false;
   }
   else {
-   release_mogo();
-   clamp_is_up = true;
+   release_arm();
+   lift_is_up = true;
   }
   wait (200, msec);
 }

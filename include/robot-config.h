@@ -1,10 +1,10 @@
 using namespace vex;
 extern motor intake;
-extern motor clampMotor;
-extern rotation clampRotation;
-extern distance mogo_distance;
+extern motor liftMotor;
+extern rotation liftRotation;
+extern distance arm_distance;
 
-void clamp_mogo();
-void release_mogo();
-void toggle_clamp();
-void detect_mogo();
+void lift_arm();
+void release_arm();
+void toggle_lift();
+void detect_arm();

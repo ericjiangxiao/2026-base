@@ -22,7 +22,7 @@ void buttonR2_action() {
 
 void buttonRight_action()
 {
-  // activate test mode if the butotn is pressed immediately afer running the program
+  // activate test mode if the button is pressed immediately afer running the program
   if ((Brain.Timer.time(sec) < 5) && !auton_test_mode) {
     controller(primary).rumble("-");
     auton_test_mode = true;
@@ -36,9 +36,9 @@ void buttonRight_action()
     return;
   }
 
-  // macro function below
+  // otherwise run macro function 
   chassis.driver_control_disabled = true;
-  // insert code 
+  // insert code below
   chassis.driver_control_disabled = false;
 }
 
@@ -53,9 +53,9 @@ void buttonB_action()
     return;
   }
 
-  // macro function below
+  // otherwise run macro function
   chassis.driver_control_disabled = true;
-  // insert code 
+  // insert code below
   chassis.driver_control_disabled = false;
 }
 
@@ -65,17 +65,6 @@ void buttonA_action()
   if (auton_test_mode)
   {
     run_auton_test();
-    return;
-  }
-
-  // change drive mode
-  if (Brain.Timer.time(sec) < 5)
-  {
-    controller(primary).rumble("-");
-    DRIVE_TANK_MODE = !DRIVE_TANK_MODE;  
-    if (DRIVE_TANK_MODE)  controller(primary).Screen.print("tank      ");
-    else  controller(primary).Screen.print("double aracde      ");  
-    return;
   }
 }
 
@@ -92,13 +81,13 @@ int main() {
 
   controller(primary).ButtonR2.pressed(buttonR2_action);
   controller(primary).ButtonL1.pressed(buttonL1_action);
-  controller(primary).ButtonR1.pressed(toggle_clamp);
+  controller(primary).ButtonR1.pressed(toggle_lift);
 
   pre_auton();
 
   // additional setup for other subsystems of the robot
-  clampRotation.setPosition(clampRotation.angle(deg), degrees);
-  mogo_distance.changed(detect_mogo);
+  liftRotation.setPosition(liftRotation.angle(deg), degrees);
+  arm_distance.changed(detect_arm);
 
   // Prevent main from exiting with an infinite loop.
   while (true) {

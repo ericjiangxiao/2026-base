@@ -16,18 +16,19 @@ motor rightMotor3 = motor(PORT6, ratio18_1, true);
 
 inertial inertial1 = inertial(PORT9);
 
-// 0: double arcade   1: tank
-bool DRIVE_TANK_MODE = false;
-
-// total number of motors, including drivetrain
-const int NUMBER_OF_MOTORS = 6;
-
-// end game reminder
-const int END_GAME_SECONDS = 75;
+// if you want the drive mode to be changeable in you code, remove the "const"
+const bool DRIVE_TANK_MODE = false;
 
 // constant definitions for driver control
 const float TURN_FACTOR = 0.85;
 const float STEER_BIAS = 0.5;
+
+// total number of motors, including drivetrain
+const int NUMBER_OF_MOTORS = 8;
+
+// end game reminder
+const int END_GAME_SECONDS = 85;
+
 
 Drive chassis(
   //Left Motors:
