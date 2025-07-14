@@ -1,64 +1,134 @@
-RGB BOTS TEMPLATE IS INSPIRED BY JARS-TEMPLATE
+# VEX V5 Competition Template
 
-# Install
-## Download the source code
-Go to [github](https://github.com/ericjiangxiao/2026-base), download the source code as zip file.
+This project provides a template for VEX V5 competition robotics, featuring a modular architecture and a library for advanced control.
 
-![source](./images/install.JPG)
+## Installation
 
-## Open the project in VS code
-- unzip the downloaded file to a folder on local drive
-- in vscdoe, select menu 'file' -> 'open folder' 
+1.  **Download:** Download the project from [GitHub](https://github.com/ericjiangxiao/2026-base) as a ZIP file.
+2.  **Unzip:** Extract the downloaded file to a local folder.
+3.  **Open in VS Code:** In Visual Studio Code, go to `File > Open Folder` and select the extracted folder.
 
-# How to use the code
-## Library Code
-Under the `rgb-template` folder, there are three files, PID, drive, and utility. The most used one is the `drive.cpp` which controls the chassis. You do not need to change any of the code in the library.
+## Project Structure
 
-### util.cpp
-Within the `util.cpp`, there are some miscellaneous functions for convenience, used within the library.
+The project is organized into the following directories:
 
-### PID.cpp
-There are two interfaces to create a PID object.
+*   `src/`: Main source code
+    *   `main.cpp`: Entry point, competition control, and button mappings.
+    *   `chassis.cpp`: Drivetrain configuration and control.
+    *   `autons.cpp`: Autonomous routines.
+    *   `robot-config.cpp`: Configuration for other motors and sensors.
+    *   `rgb-template/`: Library code.
+*   `include/`: Header files
+*   `vex/`: VEX-specific makefiles.
 
-The first is the simpler PID control which uses `error`, `kp`, and `kd`. This PID is used to correct headings while driving because it does not use `ki`. 
+## Configuration
 
-The more complex PID is the that uses all the parameters, `error`, `kp`, `ki`, `kd`, `starti`, `settle_error`,  `settle_time`, and `timeout`. This PID is used for all situations not just the drivetrain, for example an arm or claw. If you don't want to use a coefficent, then you can just set the value as "0". The `ki` parameter is what gives the PID the extra push it needs to reach the target and the `starti` is the parameter that tells the PID when to start integrating errors. For example `starti` is when the error is less the `settle_error` and then it starts integrating.
+### Drivetrain (`chassis.cpp`)
 
-### drive.cpp
-There are three types of drive API (Application programming interface): `drive_with_voltage`, `turn_to_heading`, and `drive_distance`. 
+*   **Motors and Sensors:** Define your drivetrain motors and inertial sensor, including ports, gear ratios, and motor direction.
+*   **Drive Mode:** Set `DRIVE_TANK_MODE` to `true` for tank control or `false` for arcade control.
+*   **Driver Control Constants:**
+    *   `TURN_FACTOR`: Adjusts the turning speed.
+    *   `STEER_BIAS`: Controls the curve of the robot when both joysticks are used.
+*   **PID Constants:** Tune the PID constants for driving and turning in the `reset_chassis()` function.
 
-`drive_with_voltage` is a time-based drive method where the left and right sides of the drivetrain are controled separately. To make somthing drive you must set the power level of both sides, then wait for however long, and then stop it by setting both sides' power levels to zero.
+### Other Subsystems (`robot-config.cpp`)
 
-The second drive API has three diffent variations and is the `turn_to_heading` API, where it turns to the heading acording to the bird-eye view of the field using PID. There are two other variations of the simplest version of this API which add more variables. 
+Configure motors and sensors for other subsystems like arms, claws, or intakes in this file.
 
-The first variation adds a `turn_max_voltage`, which limits the max voltage and therfore makes it slower, but far more accurate. 
+## Drive APIs (`drive.h`)
 
-However the second variation does the exact opposite; making it turn faster at the cost of reduced accuracy. It does this by also adding three more variables, `nonstop`, `settle_error`, and `settle_time`. The `nonstop` varible makes it so that it does not wait for the turn to fully complete before the next step. The `settle_error` parameter adds wiggle room for the PID turn and the `settle_time` helps the PID complete faster. 
+The `Drive` class provides a set of APIs to control the robot's movement.
 
-The final API is `drive_distance`, which drives the specified distance using PID and has four different variations. Positive is forward, negative is backward. The first and second variations are simple, they drive the specified distance and drive a specified distance with a `drive_max_voltage` respectively. The next two variations are more complex because they are curve functions; they drive and turn at the same time. The third variation introduces a `heading` and a `heading_max_voltage` while the fourth variation adds a `nonstop`, `drive_settle_error`, and `drive_settle_time`, which is similar to the `turn_to_heading` API.
+### `drive_with_voltage(float leftVoltage, float rightVoltage)`
 
-## Sample Project
-This sample project showcases how to use the RGB-template to program your robot.
+This is the most basic drive function. It sets the voltage for the left and right sides of the drivetrain directly.
 
-### chassis.cpp
-In this file, you define all the drivetrain motors as well as the inertial sensor e.g. the port numbers, gear ratio, etc. The constants of the drive PID is set in the function `reset_chassis`. You can change any parameter.
+**Example:**
 
-Also in this file, you can define the drive mode by setting the constant boolean `DRIVE_TANK_MODE` to true or false. The constants of `TURN_FACTOR` and `STEER_BIAS` determine how fast you turn with the turn joystick only, and how much you curve when both joysticks are pushed simultaneously, respectively. The constant `NUMBER_OF_MOTORS` checks if the specified number of motors are connected. If a lower number is reported, then it tells you that one motor must be disconnected. All other functions are internal, which means that they are only used in `chassis.cpp`, except for the `pre-auton` function which must be called at the beginning of you `main` function.
-
-### robot-config.cpp
-In this file, you configure all your other motors and sensors for other sub-systems. There is already some sample code to demonstrate how to use PID control to lift an arm and such.
-
-### autons.cpp
-In this file, you write your own auton functions with the drivetrain (chassis) APIs:
 ```cpp
-chassis.turn_to_heading(90);
-chassis.drive_distance(24);
+// Drive forward at half speed for 1 second
 chassis.drive_with_voltage(6, 6);
+wait(1000, msec);
 chassis.stop(coast);
 ```
-You can also configure the auton menus and can add test functions.
 
-### main.cpp
-In this file, you write additional functions for in-game actions and change the game controler buttons.
+### `turn_to_heading(...)`
 
-In the `main` function, you need to link all the functions to the corresponding the button controls, BEFORE the `pre_auton` function. Add the initialization of other sub-systems after `pre_auton`. There is some sample code to demonstrate writing a function for a button. The examples show how to dual purpose your functions depending on the context.
+This API turns the robot to a specific heading using a PID controller.
+
+**Variations:**
+
+1.  `turn_to_heading(float heading)`: Turns to the specified heading with default parameters.
+2.  `turn_to_heading(float heading, float turn_max_voltage)`: Limits the maximum voltage for a slower, more accurate turn.
+3.  `turn_to_heading(float heading, float turn_max_voltage, bool nonstop, float settle_error = 5, float settle_time = 50)`: Advanced version for faster turns with optional non-blocking execution.
+
+**Examples:**
+
+```cpp
+// Simple turn to 90 degrees
+chassis.turn_to_heading(90);
+
+// Slower, more accurate turn
+chassis.turn_to_heading(90, 6);
+
+// Fast turn without waiting for completion
+chassis.turn_to_heading(90, 12, true);
+```
+
+### `drive_distance(...)`
+
+This API drives the robot a specific distance using a PID controller, with options for maintaining a heading.
+
+**Variations:**
+
+1.  `drive_distance(float distance)`: Drives the specified distance with default parameters.
+2.  `drive_distance(float distance, float drive_max_voltage)`: Limits the maximum voltage for driving.
+3.  `drive_distance(float distance, float drive_max_voltage, float heading, float heading_max_voltage)`: Drives while maintaining a specific heading (curved drive).
+4.  `drive_distance(float distance, float drive_max_voltage, float heading, float heading_max_voltage, bool nonstop, float drive_settle_error=2, float drive_settle_time=50)`: Advanced version for curved drives with optional non-blocking execution.
+
+**Examples:**
+
+```cpp
+// Drive forward 24 inches
+chassis.drive_distance(24);
+
+// Drive forward 24 inches with a maximum voltage of 8
+chassis.drive_distance(24, 8);
+
+// Drive forward 24 inches while turning to a heading of 45 degrees
+chassis.drive_distance(24, 10, 45, 6);
+
+// Curved drive without waiting for completion
+chassis.drive_distance(24, 10, 45, 6, true);
+```
+
+## Autonomous Routines (`autons.cpp`)
+
+*   **Create Functions:** Write your autonomous routines as separate functions.
+*   **Auton Menu:** Add the names of your autonomous functions to the `auton_menu_text` array to make them selectable on the brain's screen.
+*   **Select and Run:** Use the `run_auton_item()` function to execute the selected autonomous routine.
+
+## Driver Control (`main.cpp`)
+
+*   **Button Bindings:** In the `main()` function, map controller buttons to specific actions or functions.
+*   **Context-Aware Button Actions:** Create functions that allow a single button to perform different actions based on the robot's state. For example, a button could perform one action normally, but a different action if another button is held down simultaneously or if the robot is in a specific mode (like `auton_test_mode`).
+
+## PID Control (`PID.h`)
+
+The library provides two PID controller constructors:
+
+1.  `PID(float error, float kp, float kd)`: A simple PID controller for applications like heading correction, where integral control is not necessary.
+2.  `PID(float error, float kp, float ki, float kd, float starti, float settle_error, float settle_time, float timeout)`: A full PID controller for more complex systems like arms or lifts, where precise control is required.
+
+## Utility Functions (`util.h`)
+
+The `util.h` file contains several helper functions, including:
+
+*   `reduce_0_to_360()`: Normalizes an angle to the range [0, 360).
+*   `reduce_negative_180_to_180()`: Normalizes an angle to the range [-180, 180).
+*   `to_deg()`: Converts radians to degrees.
+*   `threshold()`: Constrains a value within a specified range.
+*   `to_volt()`: Converts a percentage to voltage.
+*   `deadband()`: Creates a dead zone for joystick input.
+*   `check_motors()`: Checks for disconnected or overheated motors.
