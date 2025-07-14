@@ -1,4 +1,4 @@
-# VEX V5 Competition Template
+# RGB BOTS template
 
 This project provides a template for VEX V5 competition robotics, featuring a modular architecture and a library for advanced control.
 
