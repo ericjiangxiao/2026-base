@@ -4,9 +4,15 @@ This project provides a template for VEX V5 competition robotics, featuring a mo
 
 ## Installation
 
-1.  **Download:** Download the project from [GitHub](https://github.com/ericjiangxiao/2026-base) as a ZIP file.
-2.  **Unzip:** Extract the downloaded file to a local folder.
-3.  **Open in VS Code:** In Visual Studio Code, go to `File > Open Folder` and select the extracted folder.
+*   **Download:** 
+    *   Download the project from [GitHub](https://github.com/ericjiangxiao/2026-base) as a ZIP file.
+    *   Unzip and extract the downloaded file to a local folder.
+*   **Open in VS Code:** 
+    *   If needed, follow the instructions to install [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension).
+    *   In Visual Studio Code, go to `File > Open Folder` and select the extracted folder.
+*   **If using mac with Apple silicon**: 
+    *   If needed, [install Rosetta](https://support.apple.com/en-us/102527)
+    *   Edit `c_cpp_properties.json` file under `.vscode` folder.
 
 ## Project Structure
 
@@ -15,11 +21,12 @@ The project is organized into the following directories:
 *   `src/`: Main source code
     *   `main.cpp`: Entry point, competition control, and button mappings.
     *   `chassis.cpp`: Drivetrain configuration and control.
-    *   `autons.cpp`: Autonomous routines.
     *   `robot-config.cpp`: Configuration for other motors and sensors.
+    *   `autons.cpp`: Autonomous routines.
     *   `rgb-template/`: Library code.
 *   `include/`: Header files
 *   `vex/`: VEX-specific makefiles.
+*   `doc/`: additional documentation.
 
 ## Configuration
 
@@ -30,11 +37,23 @@ The project is organized into the following directories:
 *   **Driver Control Constants:**
     *   `TURN_FACTOR`: Adjusts the turning speed.
     *   `STEER_BIAS`: Controls the curve of the robot when both joysticks are used.
-*   **PID Constants:** Tune the PID constants for driving and turning in the `reset_chassis()` function.
+*   **PID Constants:** If neeeded, tune the PID constants for driving and turning in the `reset_chassis()` function. Otherwise, keep the default values.
 
 ### Other Subsystems (`robot-config.cpp`)
 
-Configure motors and sensors for other subsystems like arms, claws, or intakes in this file.
+*   Configure motors and sensors for other subsystems like arms, claws, or intakes in this file.
+*   Set `NUMBER_OF_MOTORS` to automatically check for disconnected or overheated motors.
+*   Write helper functions to control the subsystems.
+
+### Driver Control (`main.cpp`)
+
+*   **Button Bindings:** In the `main()` function, map controller buttons to specific actions or functions.
+*   **Context-Aware Button Actions:** Create functions that allow a single button to perform different actions based on the robot's state. For example, a button could perform one action normally, but a different action if another button is held down simultaneously or if the robot is in a specific mode (like `auton_test_mode`).
+
+### Autonomous Routines (`autons.cpp`)
+
+*   **Create Functions:** Write your autonomous routines as separate functions.
+*   **Auton Menu:** Add the names of your autonomous functions to the `auton_menu_text` array to make them selectable on the brain's screen.
 
 ## Drive APIs (`drive.h`)
 
@@ -103,32 +122,9 @@ chassis.drive_distance(24, 10, 45, 6);
 chassis.drive_distance(24, 10, 45, 6, true);
 ```
 
-## Autonomous Routines (`autons.cpp`)
-
-*   **Create Functions:** Write your autonomous routines as separate functions.
-*   **Auton Menu:** Add the names of your autonomous functions to the `auton_menu_text` array to make them selectable on the brain's screen.
-*   **Select and Run:** Use the `run_auton_item()` function to execute the selected autonomous routine.
-
-## Driver Control (`main.cpp`)
-
-*   **Button Bindings:** In the `main()` function, map controller buttons to specific actions or functions.
-*   **Context-Aware Button Actions:** Create functions that allow a single button to perform different actions based on the robot's state. For example, a button could perform one action normally, but a different action if another button is held down simultaneously or if the robot is in a specific mode (like `auton_test_mode`).
-
 ## PID Control (`PID.h`)
 
 The library provides two PID controller constructors:
 
 1.  `PID(float error, float kp, float kd)`: A simple PID controller for applications like heading correction, where integral control is not necessary.
 2.  `PID(float error, float kp, float ki, float kd, float starti, float settle_error, float settle_time, float timeout)`: A full PID controller for more complex systems like arms or lifts, where precise control is required.
-
-## Utility Functions (`util.h`)
-
-The `util.h` file contains several helper functions, including:
-
-*   `reduce_0_to_360()`: Normalizes an angle to the range [0, 360).
-*   `reduce_negative_180_to_180()`: Normalizes an angle to the range [-180, 180).
-*   `to_deg()`: Converts radians to degrees.
-*   `threshold()`: Constrains a value within a specified range.
-*   `to_volt()`: Converts a percentage to voltage.
-*   `deadband()`: Creates a dead zone for joystick input.
-*   `check_motors()`: Checks for disconnected or overheated motors.
