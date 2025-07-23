@@ -5,7 +5,7 @@ This project provides a template for VEX V5 competition robotics, featuring a mo
 ## Installation
 
 *   **Download:** 
-    *   Download the project from [GitHub](https://github.com/ericjiangxiao/2026-base) as a ZIP file.
+    *   Download the project from [GitHub](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file.
     *   Unzip and extract the downloaded file to a local folder.
 *   **Open in VS Code:** 
     *   If needed, follow the instructions to install [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension).
