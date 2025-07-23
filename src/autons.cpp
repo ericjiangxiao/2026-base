@@ -28,14 +28,18 @@ void show_auton_menu() {
 // When true, the autonomous routine will stop at each step if the 'A' button is hold.
 bool auton_test_mode = false;
 
+bool should_continue_auton_step() {
+  return !(auton_test_mode && !controller(primary).ButtonA.pressing());
+}
+
 // The first autonomous routine.
 void test1() {
   int x = auton1_parameters[0];
   int y = auton1_parameters[1];
 
   chassis.drive_distance(x, 10, 0, 6, true);
-  // If in test mode and the 'A' button not hold, stop the routine here.
-  if (auton_test_mode && !controller(primary).ButtonA.pressing() ) return;
+
+  if (!should_continue_auton_step()) return;
 
   chassis.turn_to_heading(90, 10, true);
   chassis.drive_distance(y, 10, 90, 6, true);
