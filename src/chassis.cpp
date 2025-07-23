@@ -23,11 +23,11 @@ motor rightMotor2 = motor(PORT5, ratio6_1, false);
 motor rightMotor3 = motor(PORT6, ratio18_1, true);
 
 // inertial sensor for turning and heading
-inertial inertial1 = inertial(PORT9);
+inertial inertial1 = inertial(PORT10);
 
 // if you want the drive mode to be changeable in you code, remove the "const"
 // true for tank drive, false for arcade drive
-const bool DRIVE_TANK_MODE = false;
+bool DRIVE_TANK_MODE = false;
 
 // constant definitions for driver control
 // TURN_FACTOR reduces the sensitivity of the turn stick
@@ -123,13 +123,9 @@ void usercontrol(void) {
     if (DRIVE_TANK_MODE) chassis.control_tank(controller(primary).Axis3.position(), controller(primary).Axis2.position());
     // This is the arcade drive code.
     else {
-      // This code reduces the sensitivity of the turn stick when it is near the center.
-      if (abs(controller(primary).Axis4.position()) < 100)
-        chassis.control_arcade(controller(primary).Axis2.position(), controller(primary).Axis4.position() * TURN_FACTOR, STEER_BIAS);
-      // This code uses the full sensitivity of the turn stick when it is far from the center.
-      else
-        chassis.control_arcade(controller(primary).Axis2.position(), controller(primary).Axis4.position(), STEER_BIAS);
-    }
+      // This code reduces the sensitivity of the turn stick
+      chassis.control_arcade(controller(primary).Axis2.position(), controller(primary).Axis4.position() * TURN_FACTOR, STEER_BIAS);
+   }
     // This wait prevents the loop from using too much CPU time.
     wait(20, msec); 
   }
@@ -191,7 +187,7 @@ void print_menu(char const * txt[]) {
 }
 
 // This function sets up the gyro.
-void setup_gyro() {
+bool setup_gyro() {
   // Waits until the inertial sensor is calibrated.
   while (inertial1.isCalibrating()) {
     wait(25, msec);
@@ -202,17 +198,21 @@ void setup_gyro() {
   if (!inertial1.installed()) {
     controller(primary).Screen.print("inertial sensor failure");
     controller(primary).rumble("----");
+    return false;  
   }
+  return true;
 }
 
 // This function is called before the autonomous period starts.
 void pre_auton() {
+  bool gyro_setup_success = true;
   // Sets up the gyro.
-  setup_gyro();
+  gyro_setup_success = setup_gyro();
+  bool motors_setup_success = true;
   // Checks the motors.
-  check_motors(NUMBER_OF_MOTORS);
+  motors_setup_success = check_motors(NUMBER_OF_MOTORS);
   // Resets the chassis.
   reset_chassis();
   // Shows the autonomous menu.
-  show_auton_menu();
+  if(gyro_setup_success && motors_setup_success) show_auton_menu();
 }

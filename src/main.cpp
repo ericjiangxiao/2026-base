@@ -15,12 +15,39 @@ competition Competition;
 // This function is called when the L1 button is pressed.
 // It spins the intake motor forward while the button is held down.
 void buttonL1_action() {
-  intake.spin(forward, 12, volt);
+  in_take();
+  // Wait until the button is released to stop the intake.
   while(controller(primary).ButtonL1.pressing()) {
     wait (20, msec);
   }
-  intake.stop(coast);
+  stop_rollers();
 }
+
+void buttonL2_action() {
+  out_take();
+  // Wait until the button is released to stop the intake.
+  while(controller(primary).ButtonL2.pressing()) {
+    wait (20, msec);
+  }
+  stop_rollers();
+}
+
+void buttonR1_action() {
+  chassis.stop(hold);
+  if (controller(primary).ButtonR2.pressing()) {  
+    score_middle();
+  }
+  else {
+    score_long();
+  }
+  // Wait until the button is released to stop the intake.
+  while(controller(primary).ButtonR1.pressing()) {
+    wait (20, msec);
+  }
+  chassis.stop(coast);
+  stop_rollers();
+}
+
 
 // This function is called when the R2 button is pressed.
 // It holds the drivetrain in place until the button is released.
@@ -47,27 +74,12 @@ void buttonRight_action()
     show_auton_menu();
     return;
   }
-
-  // otherwise run macro function 
-  chassis.driver_control_disabled = true;
-  // insert code below
-
-  chassis.driver_control_disabled = false;
 }
 
 // This function is called when the B button is pressed.
 void buttonB_action()
 {
-  // toggle team color if the button is pressed when intaking is running
-  if (intake.isSpinning()) {
-    controller(primary).rumble("-");
-    is_red_team = !is_red_team;
-    if (is_red_team)  controller(primary).Screen.print("red      ");
-    else  controller(primary).Screen.print("blue      ");
-    return;
-  }
-
-  // otherwise run macro function
+  // run macro function
   chassis.driver_control_disabled = true;
   // insert code below
 
@@ -77,11 +89,26 @@ void buttonB_action()
 // This function is called when the A button is pressed.
 void buttonA_action()
 {
-  // run auton test if in test mode
+  // If in test mode, run the selected autonomous routine for testing and displays the run time.
   if (auton_test_mode)
   {
-    run_auton_test();
+    chassis.driver_control_disabled = true;
+    Brain.Timer.clear();
+
+    run_auton_item(); 
+
+    double t = Brain.Timer.time(sec);
+    controller(primary).Screen.print("run time: %.1f   ", t);
+    chassis.driver_control_disabled = false;
+
+    return;
   }
+
+    // otherwise run test code 
+  chassis.driver_control_disabled = true;
+  // insert test code below
+
+  chassis.driver_control_disabled = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -102,14 +129,12 @@ int main() {
 
   controller(primary).ButtonR2.pressed(buttonR2_action);
   controller(primary).ButtonL1.pressed(buttonL1_action);
-  controller(primary).ButtonR1.pressed(toggle_lift);
+  controller(primary).ButtonL2.pressed(buttonL2_action);
+  controller(primary).ButtonR1.pressed(buttonR1_action);
+
 
   // Run the pre-autonomous function.
   pre_auton();
-
-  // additional setup for other subsystems of the robot
-  liftRotation.setPosition(liftRotation.angle(deg), degrees);
-  arm_distance.changed(detect_arm);
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
