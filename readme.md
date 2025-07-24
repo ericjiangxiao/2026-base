@@ -7,7 +7,7 @@ This project provides a lightweight c++ template for VEX V5 robotics competition
 Before you begin, make sure:
     - You have [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension) installed.
     - (Optional) You have the **GitHub** extension in VS Code installed.
-    - (Optional) If you are using Mac with Apple silicon: [install Rosetta](https://support.apple.com/en-us/102527) to simulate intel x86 chip if errors show up with VEX extenstion.
+    - (Optional) If you are using Mac with Apple silicon: [install Rosetta](https://support.apple.com/en-us/102527) to simulate intel x86 chip if errors show up with VEX extension.
 *   **Download and open the project:** 
     *   Download [the source code](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file. Unzip and extract the downloaded file to a local folder.
     *   In VScode, go to `File > Open Folder` and select the extracted folder.
@@ -60,7 +60,7 @@ The project is organized into the following directories:
 
 ## Run sample program
 - Build and download the program to the brain and using game controller to select the program slot and run the program.
-- For arcade driving, use the `left stick` to turn and `right stick` to drive forward and backward. After you release the turn stick, the controller shows the current heading. If you press the `B button`, the controller shows the distance drived. For more button mappings and custom actions, see [doc/button_control.md](doc/button_control.md).
+- For arcade driving, use the `left stick` to turn and `right stick` to drive forward and backward. After you release the stick, the controller shows the current heading. If you press the `B button`, the controller shows the distance drived and reset the motor encoder. For more button mappings and custom actions, see [doc/button_control.md](doc/button_control.md).
 - Test autons using either the field switch or the game controller in the following steps:
     - Press the controller's `Right button` within 5 seconds of program startup to enter test mode.
     - When in test mode, press the `Right button` to cycle autonomous routines.
@@ -136,7 +136,7 @@ chassis.drive_distance(24, 10, 45, 6, true);
 
 ## PID Control (`PID.h`)
 
-The library provides two PID controller constructors:
+This class provides two PID controller constructors:
 
 1.  `PID(float error, float kp, float kd)`: A simple PID controller for applications like heading correction, where integral control is not necessary.
 2.  `PID(float error, float kp, float ki, float kd, float starti, float settle_error, float settle_time, float timeout)`: A full PID controller for more complex systems like arms or lifts, where precise control is required.
