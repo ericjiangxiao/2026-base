@@ -8,12 +8,11 @@ Before you begin, make sure:
     - You have [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension) installed.
     - (Optional) You have the **GitHub** extension in VS Code installed.
     - (Optional) If you are using Mac with Apple silicon: [install Rosetta](https://support.apple.com/en-us/102527) to simulate intel x86 chip if errors show up with VEX extenstion.
-*   **Download:** 
-    *   Download [the project](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file. Unzip and extract the downloaded file to a local folder.
-    *  (Optional) Or follow the instructions to [pull the repositry](doc/how_to_clone_and_pull_with_vscode.md) using VScode.
-*   **Open in VS Code:** 
+*   **Download and open the project:** 
+    *   Download [the source code](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file. Unzip and extract the downloaded file to a local folder.
     *   In VScode, go to `File > Open Folder` and select the extracted folder.
-*   **If using Mac with Apple silicon**: 
+    *  (Optional) Or follow the instructions to [pull the repositry](doc/how_to_clone_and_pull_with_vscode.md) using VScode.
+*   **(Optional) If using Mac with Apple silicon**: 
     *   Edit `c_cpp_properties.json` file under `.vscode` folder.
 
 ## Project Structure
@@ -61,7 +60,7 @@ The project is organized into the following directories:
 
 ## Run sample program
 - Build and download the program to the brain and using game controller to select the program slot and run the program.
-- For arcade driving, use the left stick to turn and right stick to drive forward and backward. For more button mappings and custom actions, see [doc/button_control.md](doc/button_control.md).
+- For arcade driving, use the `left stick` to turn and `right stick` to drive forward and backward. After you release the turn stick, the controller shows the current heading. If you press the `B button`, the controller shows the distance drived. For more button mappings and custom actions, see [doc/button_control.md](doc/button_control.md).
 - Test autons using either the field switch or the game controller in the following steps:
     - Press the controller's `Right button` within 5 seconds of program startup to enter test mode.
     - When in test mode, press the `Right button` to cycle autonomous routines.
