@@ -14,7 +14,3 @@ extern bool DRIVE_TANK_MODE;
 void usercontrol();
 // The pre-autonomous task.
 void pre_auton();
-// Prints the autonomous selection menu to the brain screen.
-void print_menu(char const * txt[]);
-// The autonomous task.
-void autonomous();
