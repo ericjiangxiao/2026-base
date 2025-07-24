@@ -1,6 +1,6 @@
 # RGB BOTS template
 
-This project provides a template for VEX V5 competition robotics, featuring a modular architecture and a library for advanced control.
+This project provides a lightweight c++ template for VEX V5 robotics competition, featuring a modular architecture and a library for autonomous driving control.
 
 ## Installation
 *   **Prerequisites:** 
@@ -13,7 +13,7 @@ Before you begin, make sure:
     *   In VScode, go to `File > Open Folder` and select the extracted folder.
     *  (Optional) Or follow the instructions to [pull the repositry](doc/how_to_clone_and_pull_with_vscode.md) using VScode.
 *   **(Optional) If using Mac with Apple silicon**: 
-    *   Edit `c_cpp_properties.json` file under `.vscode` folder.
+    *   Copy `.vscode` folder from a new project to overwrite the settings.
 
 ## Project Structure
 
