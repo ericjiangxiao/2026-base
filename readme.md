@@ -5,7 +5,7 @@ This project provides a lightweight c++ template for VEX V5 robotics competition
 ## Installation
 *   **Prerequisites:** Before you begin, make sure:
     - You have [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension) installed.
-    - (Optional) You have the [GitHub](https:://www.github.com) extension in VS Code installed.
+    - (Optional) You have the [GitHub](https://github.com/) extension in VS Code installed.
     - (Optional) If you are using Mac with Apple silicon: [install Rosetta](https://support.apple.com/en-us/102527) to simulate intel x86 chip if errors show up with VEX extension.
 *   **Download and Open the Project:** 
     *   Download [the source code](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file. Unzip and extract the downloaded file to a local folder.
