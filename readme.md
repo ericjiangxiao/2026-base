@@ -3,16 +3,15 @@
 This project provides a lightweight c++ template for VEX V5 robotics competition, featuring a modular architecture and a library for autonomous driving control.
 
 ## Installation
-*   **Prerequisites:** 
-Before you begin, make sure:
+*   **Prerequisites:** Before you begin, make sure:
     - You have [VScode with VEX extension](https://kb.vex.com/hc/en-us/categories/360002333191-V5?sc=vs-code-extension) installed.
-    - (Optional) You have the **GitHub** extension in VS Code installed.
+    - (Optional) You have the [GitHub](https:://www.github.com) extension in VS Code installed.
     - (Optional) If you are using Mac with Apple silicon: [install Rosetta](https://support.apple.com/en-us/102527) to simulate intel x86 chip if errors show up with VEX extension.
-*   **Download and open the project:** 
+*   **Download and Open the Project:** 
     *   Download [the source code](https://github.com/ericjiangxiao/2026-base/archive/refs/heads/main.zip) as a ZIP file. Unzip and extract the downloaded file to a local folder.
     *   In VScode, go to `File > Open Folder` and select the extracted folder.
     *  (Optional) Or follow the instructions to [pull the repositry](doc/how_to_clone_and_pull_with_vscode.md) using VScode.
-*   **(Optional) If using Mac with Apple silicon**: 
+*   **(Optional) If Using Mac with Apple Silicon**: 
     *   Copy `.vscode` folder from a new project to overwrite the settings.
 
 ## Project Structure
@@ -27,47 +26,50 @@ The project is organized into the following directories:
     *   `rgb-template/`: Library code.
 *   `include/`: Header files
 *   `vex/`: VEX-specific makefiles.
-*   `doc/`: additional documentation.
+*   `doc/`: Additional documentation.
 
 ## Configuration
 
-### Drivetrain (`chassis.cpp`)
+### Drivetrain ([chassis.cpp](src/chassis.cpp))
 
-*   **Motors and Sensors:** Define your drivetrain motors and inertial sensor, including ports, gear ratios, and motor direction.
+*   **Motors and Sensors:** Define your drivetrain motors and inertial sensor, including ports, gear ratios, and motor direction. By default, the port numbers are 1, 2, 3 for the left side, 4, 5, 6 for the right side and 10 for the inertial sensor. 
 *   **Drive Mode:** Set `DRIVE_TANK_MODE` to `true` for tank control or `false` for arcade control.
 *   **Driver Control Constants:**
-    *   `TURN_FACTOR`: Adjusts the turning speed.
+    *   `TURN_FACTOR`: Slows down the turning speed.
     *   `STEER_BIAS`: Controls the curve of the robot when both joysticks are used.
-*   **PID Constants:** If needed, tune the PID constants for driving and turning in the `reset_chassis()` function. Otherwise, keep the default values.
+*   **(Optional) PID Constants:** If needed, adjust the PID constants for driving and turning in the `reset_chassis()` function. 
 
-### Other Subsystems (`robot-config.cpp`)
+### Other Subsystems ([robot-config.cpp](src/robot-config.cpp))
 
-*   **Motor configuration:** Create motors and sensors for other subsystems like intake or lift.
-*   **Motor safety check:** Set `NUMBER_OF_MOTORS` to automatically check for disconnected or overheated motors.
-*   **Help functions:** Write helper functions to control the subsystems and declare those functions in `robot-config.h`.
+*   **Motor Configuration:** Define your motors and sensors for other subsystems like intake or lift.
+*   **Number of Motors:** Set `NUMBER_OF_MOTORS` to total number of motors to allow the program to automatically check for disconnected or overheated motors.
+*   **Help functions:** Write helper functions to control the subsystems and declare those functions in [robot-config.h](include/robot-config.h) so that your other cpp files can call them.
 
-### Driver Control (`main.cpp`)
+### Driver Control ([main.cpp](src/main.cpp))
 
-*   **Button Bindings:** In the `main()` function, map controller buttons to specific actions or functions.
-*   **Context-Aware Button Actions:** Create functions that allow a single button to perform different actions based on the robot's state. For example, a button could perform one action normally, but a different action if another button is held down simultaneously or if the robot is in a specific mode (like `auton_test_mode`).
+*   **Button Functions:** Create button functions by using the helper functions in  [robot-config.cpp](src/robot-config.cpp)
+*   **Button Bindings:** After the bottom of the file, in the `main()` function, map controller buttons to the functions.
+*   **(Optional) Context-Aware Button Actions:** Create functions that allow a single button to perform different actions based on the robot's state. For example, a button could perform one action normally, but a different action if another button is held down simultaneously or if the robot is in a specific mode (like `auton_test_mode`).
 
-### Autonomous Routines (`autons.cpp`)
+### Autonomous Routines ([autons.cpp](src/autons.cpp))
 
-*   **Create Functions:** Write your autonomous routines as separate functions.
-*   **Map functions:** Map auton functions to menu items in the `run_auton_item()` function 
-*   **Auton Menu:** Add the names of your autonomous functions to the `auton_menu_text` array to make them selectable on the brain's screen.
-*   **Auton parameters:** Create array variables for the auton functions at the top of the file to easy tuning the auton parameters.
+*   **Auton Functions:** Write your autonomous routines as separate functions.
+*   **Auton Mappings:** Map auton functions to menu items in the `run_auton_item()` function 
+*   **Auton Menu Text:** Add the names of your autonomous functions to the `auton_menu_text` array to make them shown on the brain's screen.
+*   **(Optional) Auton Parameters:** Create array variables for the auton functions at the top of the file for easy tuning the auton parameters during tournaments.
 
 ## Run sample program
 - Build and download the program to the brain and using game controller to select the program slot and run the program.
-- For arcade driving, use the `left stick` to turn and `right stick` to drive forward and backward. After you release the stick, the controller shows the current heading. If you press the `B button`, the controller shows the distance drived and reset the motor encoder. For more button mappings and custom actions, see [doc/button_control.md](doc/button_control.md).
-- Test autons using either the field switch or the game controller in the following steps:
+- For arcade driving, use the `left stick` to turn and `right stick` to drive forward and backward. After you release the stick, the controller screen shows the current heading. If you press the `B button`, the controller shows the distance drived and reset the motor encoder. For sample button mappings and actions, see [button controls](doc/button_control.md).
+- (Optional) Test autons using the game controller with the following steps:
     - Press the controller's `Right button` within 5 seconds of program startup to enter test mode.
-    - When in test mode, press the `Right button` to cycle autonomous routines.
-    - Press the `A button` to run the selected routine. Hold the button to continue pass stops.
+    - When in test mode, press the `Right button` to cycle through the list of autonomous routines on the controller screen.
+    - Press the `A button` to run the routine shown on the screen. Hold the button to continue pass stops.
 
-
-## Drive APIs (`drive.h`)
+&nbsp;
+---
+# More Information of the [Library](src/rgb-template/)
+## Drive APIs ([drive.h](include/rgb-template/drive.h))
 
 The `Drive` class provides a set of APIs to control the robot's movement.
 
@@ -134,7 +136,7 @@ chassis.drive_distance(24, 10, 45, 6);
 chassis.drive_distance(24, 10, 45, 6, true);
 ```
 
-## PID Control (`PID.h`)
+## PID Control ([PID.h](include/rgb-template/PID.h))
 
 This class provides two PID controller constructors:
 
